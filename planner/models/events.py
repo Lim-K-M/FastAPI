@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 
 class Event(Document):
+    creator: Optional[str]
     title: str
     image: str
     description: str
@@ -22,7 +23,7 @@ class Event(Document):
             }
         }
 
-    class Settings:
+    class Collection:
         name = "events"
 
 

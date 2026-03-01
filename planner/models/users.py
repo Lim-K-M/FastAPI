@@ -1,26 +1,24 @@
 from beanie import Document
-from typing import Optional, List
+
 from pydantic import BaseModel, EmailStr
-from models.events import Event
+
 
 class User(Document):
     email: EmailStr
     password: str
-    events: Optional[List[Event]]
 
-    class Settings:
+    class Collection:
         name = "users"
 
     class Config:
         schema_extra = {
             "example": {
                 "email": "fastapi@packt.com",
-                "password": "strong!!!",
-                "events": []
+                "password": "strong!!!"
             }
         }
 
 
-class UserSignIn(BaseModel):
-    email: EmailStr
-    password: str
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str

@@ -1,9 +1,11 @@
+from typing import Optional
+
 from beanie import init_beanie, PydanticObjectId
-from motor.motor_asyncio import AsyncIOMotorClient
-from typing import Optional, Any, List
-from pydantic import BaseSettings, BaseModel
 from models.events import Event
 from models.users import User
+from motor.motor_asyncio import AsyncIOMotorClient
+from pydantic import BaseSettings, BaseModel
+
 
 class Settings(BaseSettings):
     DATABASE_URL: Optional[str] = None
@@ -17,25 +19,26 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
 
+
 class Database:
     def __init__(self, model):
         self.model = model
 
-    async def save(self, document) -> None:
+    async def save(self, document):
         await document.create()
         return
 
-    async def get(self, id: PydanticObjectId) -> Any:
+    async def get(self, id: PydanticObjectId):
         doc = await self.model.get(id)
         if doc:
             return doc
         return False
 
-    async def get_all(self) -> List[Any]:
+    async def get_all(self):
         docs = await self.model.find_all().to_list()
         return docs
 
-    async def update(self, id: PydanticObjectId, body: BaseModel) -> Any:
+    async def update(self, id: PydanticObjectId, body: BaseModel):
         doc_id = id
         des_body = body.dict()
 
@@ -50,7 +53,7 @@ class Database:
         await doc.update(update_query)
         return doc
 
-    async def delete(self, id: PydanticObjectId) -> bool:
+    async def delete(self, id: PydanticObjectId):
         doc = await self.get(id)
         if not doc:
             return False
